@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Chat Socket.io</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #222; color: #fff; }
+        #messages { list-style-type: none; padding: 0; }
+        #messages li { padding: 8px; margin-bottom: 5px; background: #333; border-radius: 4px; }
+        input { padding: 10px; width: 300px; }
+        button { padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Teste de Conexão em Tempo Real</h2>
+    <ul id="messages"></ul>
+    
+    <input id="inputMessage" type="text" placeholder="Digite uma mensagem..." />
+    <button onclick="enviarMensagem()">Enviar</button>
+
+    <!-- Importa a biblioteca do cliente Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Conecta automaticamente ao nosso servidor local
+
+        function enviarMensagem() {
+            const input = document.getElementById('inputMessage');
+            if (input.value.trim() === '') return;
+
+            // Envia a mensagem digitada para o servidor
+            socket.emit('chat-message', input.value);
+            input.value = '';
+        }
+
+        // Quando o servidor mandar uma mensagem de volta, exibe na tela
+        socket.on('chat-message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            document.getElementById('messages').appendChild(item);
+        });
+    </script>
+</body>
+</html>
